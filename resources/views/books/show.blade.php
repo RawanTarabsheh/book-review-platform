@@ -23,25 +23,39 @@
 
                         <a href="{{ route('books.index') }}">Back to Book List</a>
                     </div>
-                    <div>
-                        <form action="{{ route('books.submitReview', $id) }}" method="post">
+                    <div class="reviews">
+                        <h1 class="title">Your Review History</h1>
+                
+                        @if (isset($book_reviews->reviews) && $book_reviews->reviews->count() > 0)
+                            <div class="review-list">
+                                @foreach ($book_reviews->reviews as $review)
+                                    <div class="review-item">
+                                        <h3>{{ $review->book->title }}</h3>
+                                        <p>Rating: {{ $review->rating }}</p>
+                                        <p>Comment: {{ $review->comment }}</p>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p>No reviews found. Start reviewing books!</p>
+                        @endif
+                    </div>
+
+                    <div class="review_form">
+
+                        <form action="{{ route('books.submitReview', $book_info->id) }}" method="post">
                             @csrf
+                            <div class="title">Submit your Review & Rate for this book</div>
+                            <input type="text" value="{{  $book_info->api_id}}" name="api_id" hidden/>
                             <label for="rating">Rating:</label>
-                            <input type="number" name="rating" min="1" max="5" required>
+                            <input type="number" name="rating" min="1" max="5" placeholder="Choose Rate" >
 
                             <label for="comment">Comment:</label>
-                            <textarea name="comment" required></textarea>
+                            <textarea name="comment" placeholder="Add your comment ...."></textarea>
 
                             <button type="submit">Submit Review</button>
                         </form>
-
-                        <form action="{{ route('books.rateBook', $id) }}" method="post">
-                            @csrf
-                            <label for="rating">Rate the Book:</label>
-                            <input type="number" name="rating" min="1" max="5" required>
-
-                            <button type="submit">Rate</button>
-                        </form>
+         
                     </div>
                 </div>
             </div>

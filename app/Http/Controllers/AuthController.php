@@ -47,7 +47,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $user = Auth::user();
 
+            // Update the last login timestamp for the authenticated user
+            $user->update(['last_login_at' => now()]);
             return redirect()->intended('/home'); // Redirect to the intended page or the dashboard
         }
 

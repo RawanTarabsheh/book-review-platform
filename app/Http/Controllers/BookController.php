@@ -40,31 +40,30 @@ class BookController extends Controller
 
     public function show($api_id)
     {
-        // dd($id);
         // Make a request to the Google Books API to get details of a specific book
         $response = Http::get("https://www.googleapis.com/books/v1/volumes/{$api_id}");
-
         $book = $response->json();
-        $book_info=Book::where('api_id',$api_id)->first();
-        $id=$book_info->id;
-        return view('books.show', compact('book','id'));
+        $user = Auth::user();
+        $book_info = Book::where('api_id', $api_id)->with('reviews')->first();
+        $book_reviews = Book::where('api_id', $api_id)
+            ->whereHas('reviews', function ($query) use ($user) {
+                $query->where('user_id', $user->id)->latest();
+            })
+            ->with('reviews')
+            ->first();
+        return view('books.show', compact('book', 'book_info', 'book_reviews'));
     }
-
-    // public function show($id)
-    // {
-    //     $book = Book::findOrFail($id);
-    //     return view('books.show', compact('book'));
-    // }
 
     public function submitReview(Request $request, $id)
     {
         $request->validate([
             'rating' => 'required|integer|between:1,5',
             'comment' => 'required|string',
+            'api_id' => 'string'
         ]);
 
         $user = Auth::user();
-
+        $api_id = $request->input('api_id');
         $review = new Review([
             'user_id' => $user->id,
             'book_id' => $id,
@@ -74,29 +73,7 @@ class BookController extends Controller
 
         $review->save();
 
-        return redirect()->route('books.show', $id)->with('success', 'Review submitted successfully.');
+        return redirect()->route('books.show', $api_id)->with('success', 'Review submitted successfully.');
     }
-
-    public function rateBook(Request $request, $id)
-    {
-        $request->validate([
-            'rating' => 'required|integer|between:1,5',
-        ]);
-
-        $user = Auth::user();
-
-        // Update the book's rating logic
-        $book = Book::findOrFail($id);
-        $book->rating = $request->input('rating');
-        $book->save();
-
-        return redirect()->route('books.show', $id)->with('success', 'Rating updated successfully.');
-    }
-
-    public function userHistory()
-    {
-        $user = Auth::user();
-        $reviews = $user->reviews()->with('book')->latest()->get();
-        return view('user.history', compact('reviews'));
-    }
+   
 }
