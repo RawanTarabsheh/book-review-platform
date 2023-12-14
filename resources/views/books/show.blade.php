@@ -11,7 +11,7 @@
                         <h2>{{ $book['volumeInfo']['title'] }}</h2>
                         <p>Authors: {{ implode(', ', $book['volumeInfo']['authors']) }}</p>
                         <p>Published Date: {{ $book['volumeInfo']['publishedDate'] }}</p>
-                        <p>Description: {{ $book['volumeInfo']['description'] }}</p>
+                        <p>Description: {!! $book['volumeInfo']['description'] !!}</p>
                         @if (isset($book['volumeInfo']['categories']))
                             <p>Categories: {{ implode(', ', $book['volumeInfo']['categories']) }}</p>
                         @else
@@ -24,15 +24,16 @@
                         <a href="{{ route('books.index') }}">Back to Book List</a>
                     </div>
                     <div class="reviews">
-                        <h1 class="title">Your Review History</h1>
-                
+                        <h1 class="title">Your Review History For  {{ $book_info->title }}</h1>
+
                         @if (isset($book_reviews->reviews) && $book_reviews->reviews->count() > 0)
                             <div class="review-list">
                                 @foreach ($book_reviews->reviews as $review)
                                     <div class="review-item">
-                                        <h3>{{ $review->book->title }}</h3>
-                                        <p>Rating: {{ $review->rating }}</p>
-                                        <p>Comment: {{ $review->comment }}</p>
+                                        <p class="p-0 m-0">Rating: {{ $review->rating }}</p>
+                                        <p class="p-0 m-0">Comment: {{ $review->comment }}</p>
+                                        <p class="p-0 m-0">since: {{ $review->created_at->diffForHumans() }}</p>
+
                                     </div>
                                 @endforeach
                             </div>
@@ -55,7 +56,7 @@
 
                             <button type="submit">Submit Review</button>
                         </form>
-         
+
                     </div>
                 </div>
             </div>

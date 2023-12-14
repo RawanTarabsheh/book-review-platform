@@ -34,15 +34,43 @@ button:hover {
 .title {
     font-size: 1.5em;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .review-list {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .review-item {
     border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 15px;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+
+
+.custom-pagination {
+    margin-top: 20px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    color: #333;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.page-link:hover {
+    background-color: #e9ecef;
 }

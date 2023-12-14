@@ -38,6 +38,7 @@ Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('das
 Route::middleware(['auth'])->group(function () {
     Route::get('/books', [BookController::class, 'index'])->name('books.index');
     Route::get('/books/{id}', [BookController::class, 'show'])->name('books.show');
+    Route::get('/history', [BookController::class, 'history'])->name('books.history');
     Route::post('/books/{id}/submit-review', [BookController::class, 'submitReview'])->name('books.submitReview');
     Route::post('/books/{id}/rate', [BookController::class, 'rateBook'])->name('books.rateBook');
     Route::get('/user/history', [BookController::class, 'userHistory'])->name('user.history')->middleware('auth');

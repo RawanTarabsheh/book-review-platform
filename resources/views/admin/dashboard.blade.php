@@ -13,7 +13,7 @@
             background-color: #f4f4f4;
         }
 
-        header {
+        header ,header a{
             background-color: #333;
             color: white;
             padding: 15px;
@@ -87,6 +87,9 @@
 
     <header>
         <h1>Admin Dashboard</h1>
+        <div>
+            <a href="{{ route('home') }}" >{{ __('Books Platform') }}</a>
+        </div>
     </header>
 
     <div class="container">

@@ -18,7 +18,6 @@ class BookController extends Controller
             'q' => 'laravel',
         ]);
         $books = $response->json()['items'];
-        // dd($books);
         foreach ($books as $book) {
             $api_id = $book['id'];
             $data = [
@@ -43,15 +42,15 @@ class BookController extends Controller
         // Make a request to the Google Books API to get details of a specific book
         $response = Http::get("https://www.googleapis.com/books/v1/volumes/{$api_id}");
         $book = $response->json();
-        $user = Auth::user();
         $book_info = Book::where('api_id', $api_id)->with('reviews')->first();
-        $book_reviews = Book::where('api_id', $api_id)
-            ->whereHas('reviews', function ($query) use ($user) {
-                $query->where('user_id', $user->id)->latest();
-            })
-            ->with('reviews')
-            ->first();
+        $book_reviews = Book::getRivews($api_id);
         return view('books.show', compact('book', 'book_info', 'book_reviews'));
+    }
+
+    public function history()
+    {
+        $reviews = Book::getRivews();
+        return view('books.history',compact('reviews'));
     }
 
     public function submitReview(Request $request, $id)
@@ -75,5 +74,4 @@ class BookController extends Controller
 
         return redirect()->route('books.show', $api_id)->with('success', 'Review submitted successfully.');
     }
-   
 }

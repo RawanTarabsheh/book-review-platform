@@ -27,4 +27,13 @@ class Review extends Model
     {
         return $this->belongsTo(Book::class);
     }
+    public static function userActivity()
+    {
+        // Retrieve the last 10 user activities (adjust as needed)
+        $userActivity = Review::with(['user', 'book'])
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+        return $userActivity;
+    }
 }

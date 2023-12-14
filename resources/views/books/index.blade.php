@@ -13,7 +13,7 @@
                             <h2>{{ $book['volumeInfo']['title'] }}</h2>
                             <p>Authors: {{ implode(', ', $book['volumeInfo']['authors']) }}</p>
                             <p>Published Date: {{ $book['volumeInfo']['publishedDate'] }}</p>
-                            <p>Description: {{ $book['volumeInfo']['description'] }}</p>
+                            <p>Description: {!! Str::limit($book['volumeInfo']['description'],300)  !!}</p>
                             <a href="{{ route('books.show', $book['id']) }}">View Details</a>
                             <hr>
                         </div>

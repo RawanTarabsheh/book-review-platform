@@ -25,11 +25,12 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'last_login_at' => now()
         ]);
 
         Auth::login($user);
 
-        return redirect('/dashboard'); // Redirect to the user's dashboard after registration
+        return redirect('/'); // Redirect to the user's dashboard after registration
     }
 
     public function showLoginForm()
@@ -51,7 +52,7 @@ class AuthController extends Controller
 
             // Update the last login timestamp for the authenticated user
             $user->update(['last_login_at' => now()]);
-            return redirect()->intended('/home'); // Redirect to the intended page or the dashboard
+            return redirect()->intended('/'); // Redirect to the intended page or the dashboard
         }
 
         return back()->withErrors([

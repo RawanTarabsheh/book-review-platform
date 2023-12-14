@@ -15,9 +15,13 @@
                     @endif
 
                     {{ __('You are logged in!') }}
-                    
+
                     <div>
                         <a href="{{ route('books.index') }}">{{ __('Show Books') }}</a>
+
+                    </div>
+                    <div>
+                        <a href="{{ route('books.history') }}">{{ __('Your history ') }}</a>
 
                     </div>
                 </div>
