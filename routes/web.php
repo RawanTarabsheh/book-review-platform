@@ -34,6 +34,9 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+Route::get('/generate-pdf', [AdminController::class, 'generatePDF'])->name('generatePDF');
+Route::get('/generate-excel', [AdminController::class, 'generateEXCEL'])->name('generateEXCEL');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/books', [BookController::class, 'index'])->name('books.index');

@@ -4,83 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
 
-        header ,header a{
-            background-color: #333;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 20px auto;
-        }
-
-        .sidebar {
-            width: 250px;
-            background-color: #222;
-            color: white;
-            padding: 20px;
-        }
-
-        .content {
-            flex: 1;
-            padding: 20px;
-            background-color: white;
-        }
-
-        .stats-section {
-            margin-bottom: 30px;
-        }
-
-        .stats-box {
-            background-color: #3498db;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin: 10px;
-            border-radius: 5px;
-        }
-
-        .activity-section {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
-        }
-
-        .user-activity {
-            margin-top: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #333;
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -113,6 +40,10 @@
                 <div class="stats-box">Total reviews: {{ (isset($reviewCount)) ? $reviewCount :0}}</div>
 
                 <!-- Add more statistics boxes as needed -->
+            </div>
+            <div class="icon-container">
+                <a href="{{ route('generatePDF') }}" target="_blank"><span class="icon pdf-icon"></span></a>
+                <a href="{{ route('generateEXCEL') }}" ><span class="icon excel-icon"></span></a>
             </div>
 
             <!-- User Activity Monitoring Section -->
