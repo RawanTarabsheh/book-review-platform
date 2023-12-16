@@ -25,27 +25,27 @@ class Book extends Model
     public static function insertOrUpdate($api_id,$data){
         self::updateOrInsert(
             ['api_id' => $api_id],
-           $data
+            $data
         );
         return true;
-
-
     }
-    public static function getRivews($api_id=null){
+    public static function getRivews($api_id = null)
+    {
         $user = Auth::user();
-        if($api_id !== null)
-        $book_reviews = Book::where('api_id', $api_id)
-            ->whereHas('reviews', function ($query) use ($user) {
+        $userId = $user->id;
+        if ($api_id !== null)
+            $book_reviews = Book::where('api_id', $api_id)
+                ->with(['reviews' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId);
+                }])->whereHas('reviews', function ($query) use ($user) {
+                    $query->where('user_id', $user->id)->latest();
+                })->first();
+        else
+            $book_reviews = Book::with(['reviews' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            }])->whereHas('reviews', function ($query) use ($user) {
                 $query->where('user_id', $user->id)->latest();
-            })
-            ->with('reviews')
-            ->first();
-            else
-            $book_reviews = Book::whereHas('reviews', function ($query) use ($user) {
-                $query->where('user_id', $user->id)->latest();
-            })
-            ->with('reviews')
-            ->paginate(2);
-            return $book_reviews;
+            })->paginate(2);
+        return $book_reviews;
     }
 }

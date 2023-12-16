@@ -49,7 +49,7 @@ class BookController extends Controller
 
     public function history()
     {
-        $reviews = Book::getRivews();
+       $reviews = Book::getRivews(null);
         return view('books.history',compact('reviews'));
     }
 
