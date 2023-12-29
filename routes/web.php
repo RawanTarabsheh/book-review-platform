@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BookController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\web\AuthController;
+use App\Http\Controllers\web\HomeController;
+use App\Http\Controllers\web\BookController;
+use App\Http\Controllers\admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ use App\Http\Controllers\AdminController;
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
 Route::get('/register', [AuthController::class, 'showRegistrationForm']);
@@ -32,10 +33,13 @@ Route::get('/login', [AuthController::class, 'showLoginForm']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::prefix('/admin/')->group(function(){
+    Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('generate-pdf', [AdminController::class, 'generatePDF'])->name('generatePDF');
+    Route::get('generate-excel', [AdminController::class, 'generateEXCEL'])->name('generateEXCEL');
+    Route::get('users', [AdminController::class, 'getUsers'])->name('getUsers');
 
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-Route::get('/generate-pdf', [AdminController::class, 'generatePDF'])->name('generatePDF');
-Route::get('/generate-excel', [AdminController::class, 'generateEXCEL'])->name('generateEXCEL');
+});
 
 
 Route::middleware(['auth'])->group(function () {

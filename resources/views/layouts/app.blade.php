@@ -39,7 +39,7 @@
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">{{ __('Admin dashboard') }}</a>
+                            <a class="nav-link" href="{{ route('dashboard') }}" target="_blank">{{ __('Admin dashboard') }}</a>
                         </li>
                         @guest
                             @if (Route::has('login'))

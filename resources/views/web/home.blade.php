@@ -17,11 +17,9 @@
                     {{ __('You are logged in!') }}
 
                     <div>
-                        <a href="{{ route('books.index') }}">{{ __('Show Books') }}</a>
+                        <a href="{{ route('books.index') }}" class="tab">{{ __('Show Books') }}</a>
 
-                    </div>
-                    <div>
-                        <a href="{{ route('books.history') }}">{{ __('Your history ') }}</a>
+                        <a href="{{ route('books.history') }}" class="tab">{{ __('Your history ') }}</a>
 
                     </div>
                 </div>

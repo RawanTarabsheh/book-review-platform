@@ -45,7 +45,11 @@ class User extends Authenticatable
         'last_login_at' => 'datetime',
     ];
     public function reviews()
-{
-    return $this->hasMany(Review::class);
-}
+    {
+        return $this->hasMany(Review::class);
+    }
+    public static function getUSers()
+    {
+        return self::with('reviews')->get();
+    }
 }

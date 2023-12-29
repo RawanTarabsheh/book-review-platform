@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\web;
 
 use Carbon\Carbon;
 use App\Models\Book;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Database\QueryException;
 
 class BookController extends Controller
 {
@@ -34,7 +37,7 @@ class BookController extends Controller
             Book::insertOrUpdate($api_id, $data);
         }
 
-        return view('books.index', compact('books'));
+        return view('web.books.index', compact('books'));
     }
 
     public function show($api_id)
@@ -44,34 +47,40 @@ class BookController extends Controller
         $book = $response->json();
         $book_info = Book::where('api_id', $api_id)->with('reviews')->first();
         $book_reviews = Book::getRivews($api_id);
-        return view('books.show', compact('book', 'book_info', 'book_reviews'));
+        return view('web.books.show', compact('book', 'book_info', 'book_reviews'));
     }
 
     public function history()
     {
-       $reviews = Book::getRivews(null);
-        return view('books.history',compact('reviews'));
+        $reviews = Book::getRivews(null);
+        return view('web.books.history', compact('reviews'));
     }
 
     public function submitReview(Request $request, $id)
     {
-        $request->validate([
-            'rating' => 'required|integer|between:1,5',
-            'comment' => 'required|string',
-            'api_id' => 'string'
-        ]);
+        try {
+            DB::beginTransaction();
+            $request->validate([
+                'rating' => 'required|integer|between:1,5',
+                'comment' => 'required|string',
+                'api_id' => 'string'
+            ]);
 
-        $user = Auth::user();
-        $api_id = $request->input('api_id');
-        $review = new Review([
-            'user_id' => $user->id,
-            'book_id' => $id,
-            'rating' => $request->input('rating'),
-            'comment' => $request->input('comment'),
-        ]);
+            $user = Auth::user();
+            $api_id = $request->input('api_id');
+            $review = new Review([
+                'user_id' => $user->id,
+                'book_id' => $id,
+                'rating' => $request->input('rating'),
+                'comment' => $request->input('comment'),
+            ]);
 
-        $review->save();
-
-        return redirect()->route('books.show', $api_id)->with('success', 'Review submitted successfully.');
+            $review->save();
+            DB::commit();
+            return redirect()->route('books.show', $api_id)->with('success', 'Review submitted successfully.');
+        } catch (QueryException $e) {
+            DB::rollback();
+            return response()->json(['error' => 'Something worng.']);
+        }
     }
 }

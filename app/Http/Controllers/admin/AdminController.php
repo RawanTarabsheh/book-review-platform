@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
 use PDF;
 use App\Models\Book;
@@ -8,11 +8,11 @@ use App\Models\User;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Exports\ExportReport;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
-    //
     public function dashboard()
     {
         $bookCount = Book::count();
@@ -20,6 +20,11 @@ class AdminController extends Controller
         $reviewCount = Review::count();
         $userActivity = Review::userActivity();
         return view('admin.dashboard', compact('bookCount', 'userCount', 'reviewCount', 'userActivity'));
+    }
+    public function getUsers(){
+        $users = User::getUsers();
+        return view('admin.users', compact('users'));
+
     }
     public function generatePDF()
     {
@@ -33,7 +38,6 @@ class AdminController extends Controller
             'userCount' => $userCount,
             'reviewCount' => $reviewCount,
         ];
-        // $pdf = PDF::loadView('pdf', $data);
 
         $pdf = PDF::loadView(
             'pdf',
@@ -77,15 +81,15 @@ class AdminController extends Controller
 
         return $pdf->download('user_book_report.pdf');
     }
-    public function generateEXCEL(){
+    public function generateEXCEL()
+    {
         $bookCount = Book::count();
         $userCount = User::count();
         $reviewCount = Review::count();
         $userActivity = Review::userActivity();
 
-        $export = new ExportReport($bookCount, $userCount,$reviewCount,$userActivity);
+        $export = new ExportReport($bookCount, $userCount, $reviewCount, $userActivity);
 
         return Excel::download($export, 'user_book_report.xlsx');
-
     }
 }
